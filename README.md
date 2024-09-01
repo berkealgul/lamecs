@@ -2,7 +2,7 @@
 
 lamecs is a header only library for sparse-set based "pure" ecs implementation
 
-# Code example
+## Code example
 ```cpp
 struct pos 
 {
