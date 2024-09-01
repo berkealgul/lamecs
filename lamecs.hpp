@@ -248,7 +248,18 @@ private:
     }
 
     template<typename C>
+    C& get(entity_id id)
+    {
+        sparse_set<C>& pool = get_component_pool<C>(false);
+        LAMECS_ASSERT(!contains_entity(id), "Entity: " << id << " does not exist during .get() call");
+        LAMECS_ASSERT(!pool.contains(id), "Entity: " << id << " does not have component " << get_component_type<C>() << " during .get() call");
+        return pool[id];
+    }
+
+    template<typename C>
     inline component_type get_component_type() { return typeid(C).name(); }
+
+    inline bool contains_entity(entity_id id) { return component_bitsets_.contains(id); }
 
 public:
     registry() 
@@ -307,14 +318,6 @@ public:
     }
 
     template<typename C>
-    C& get(entity_id id)
-    {
-        LAMECS_ASSERT(!contains_entity(id), "Entity: " << id << " does not exist during .get() call");
-        sparse_set<C>& pool = get_component_pool<C>(false);
-        return pool[id];
-    }
-
-    template<typename C>
     void register_component()
     {
         LAMECS_ASSERT(component_bit_positions_.size() > MAX_COMPONENT_COUNT, "Maximum component limit reached, cant register component");
@@ -328,7 +331,7 @@ public:
         {
             if(!generate_available_entity_chuck())
             {
-                LAMECS_INFO("Maximum enitity limit reached");
+                LAMECS_INFO("Maximum enitity limit reached, cant create entity");
                 return null_entity;
             }
         }
@@ -338,7 +341,12 @@ public:
         return id;
     }
 
-    bool contains_entity(entity_id id) { return component_bitsets_.contains(id); }
+    template<typename ...Components>
+    std::tuple<Components&...> get_entity(entity_id id)
+    { 
+        LAMECS_ASSERT(!contains_entity(id), "Entity does not exist in .get_entity()");
+        return std::tuple<Components&...>(get<Components>(id)...);
+    }
 
     template<typename ...Components>
     std::vector<std::tuple<entity_id, Components&...>> view()
@@ -350,7 +358,7 @@ public:
         {
             if((mask & target_mask) == target_mask)
             {
-                for(auto id : group.data()) { result.emplace_back(id,get<Components>(id)...); }   
+                for(auto id : group.data()) { result.emplace_back(id, get<Components>(id)...); }   
             }
         }
 

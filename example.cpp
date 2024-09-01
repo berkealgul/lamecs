@@ -15,7 +15,6 @@ struct vel
     int dz;
 };
 
-
 int main()
 {
     lamecs::registry registry;
@@ -37,14 +36,17 @@ int main()
     registry.remove<vel>(e2);
     
     registry.remove_entity(e3);
-    
+
+    // access and modify specific components of an entity
+    auto [p, v] = registry.get_entity<pos, vel>(e1);
+
     // callback style iterating
-    registry.each<pos>([&registry](lamecs::entity_id id, pos& v)
+    registry.each<vel>([&registry](lamecs::entity_id id, vel& v)
     {
         //...
     });
 
-    registry.each<vel>([&registry](vel& v)
+    registry.each<vel, pos>([&registry](vel& v, pos& p)
     {
         //...
     });
