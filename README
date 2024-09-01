@@ -1,6 +1,9 @@
-#define LAMECS_INFO_ENABLED
-#include "lamecs.hpp"
+# lamecs
 
+lamecs is a header only library for sparse-set based "pure" ecs implementation
+
+# Code example
+```cpp
 struct pos 
 {
     int x;
@@ -14,7 +17,6 @@ struct vel
     int dy;
     int dz;
 };
-
 
 int main()
 {
@@ -57,3 +59,8 @@ int main()
 
     return 0;
 }
+```
+
+It is far from perfect but it was nice learning for me to understand data oriented design and C++ templates
+
+A shout to Michele Caini's [EnTT](https://github.com/skypjack/entt) and [ECS back and for](https://skypjack.github.io/2019-02-14-ecs-baf-part-1/), and Chris Christakis's [seecs](https://github.com/chrischristakis/seecs) which were awesome learning materials.
