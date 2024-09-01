@@ -63,4 +63,4 @@ int main()
 
 It is far from perfect but it was nice learning for me to understand data oriented design and C++ templates
 
-A shout to Michele Caini's [EnTT](https://github.com/skypjack/entt) and [ECS back and for](https://skypjack.github.io/2019-02-14-ecs-baf-part-1/), and Chris Christakis's [seecs](https://github.com/chrischristakis/seecs) which were awesome learning materials.
+A shout to Michele Caini's [EnTT](https://github.com/skypjack/entt) and [ECS back and forth series](https://skypjack.github.io/2019-02-14-ecs-baf-part-1/), and Chris Christakis's [seecs](https://github.com/chrischristakis/seecs) which were awesome learning materials.
