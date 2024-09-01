@@ -33,6 +33,7 @@ constexpr size_t tombstone = std::numeric_limits<size_t>::max();
 
 // registry parameters
 constexpr size_t MAX_ENTITY_COUNT    = 100000;
+constexpr size_t ENTITY_CHUNK_SIZE   = 1000;
 constexpr size_t MAX_COMPONENT_COUNT = 64;
 
 // sparse set parameters
@@ -43,6 +44,8 @@ constexpr size_t SPARSE_PAGINATION_CHUNK_SIZE = 1600;
 using entity_id = u_int32_t;
 using component_type   = const char*; 
 using component_bitset = std::bitset<MAX_COMPONENT_COUNT>;
+
+constexpr entity_id null_entity = std::numeric_limits<entity_id>::max();
 
 class sparse_set_interface 
 {
@@ -159,7 +162,6 @@ public:
     const std::vector<C>& data() { return dense_arr_; }
 };
 
-
 class registry
 {
 private:    
@@ -168,6 +170,8 @@ private:
     std::unordered_map<component_bitset, sparse_set<entity_id>> enitity_groups_;
     std::unordered_map<component_type, size_t> component_bit_positions_;
     sparse_set<component_bitset> component_bitsets_;
+
+    size_t entity_limit_ = 0;
 
     template<typename C>
     size_t get_component_position()
@@ -234,19 +238,28 @@ private:
         enitity_groups_[bitset].push(id, id);
     }
 
+    bool generate_available_entity_chuck()
+    {
+        if(entity_limit_ == MAX_ENTITY_COUNT) { return false; }
+        size_t new_limit = std::min(entity_limit_+ENTITY_CHUNK_SIZE, MAX_ENTITY_COUNT);
+        for(entity_id i = entity_limit_; i < new_limit; i++) { available_entity_ids_.push(i); }
+        entity_limit_ = new_limit;
+        return true;
+    }
+
     template<typename C>
     inline component_type get_component_type() { return typeid(C).name(); }
 
 public:
     registry() 
     {
-        for(entity_id i = 0; i < MAX_COMPONENT_COUNT; i++) { available_entity_ids_.push(i); }
+        generate_available_entity_chuck();
     }
 
     template <typename C>
     void emplace(entity_id id, C&& component={})
     {
-        if(id == tombstone)
+        if(id == null_entity)
         {
             LAMECS_INFO("Entity is not valid");
             return;
@@ -311,7 +324,15 @@ public:
 
     entity_id create_entity()
     {
-        LAMECS_ASSERT(available_entity_ids_.empty(), "Maximum enitity limit reached");
+        if(available_entity_ids_.empty())
+        {
+            if(!generate_available_entity_chuck())
+            {
+                LAMECS_INFO("Maximum enitity limit reached");
+                return null_entity;
+            }
+        }
+
         entity_id id = available_entity_ids_.front();
         available_entity_ids_.pop();
         return id;
