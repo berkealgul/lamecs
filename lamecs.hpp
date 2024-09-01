@@ -5,6 +5,7 @@
 #include <bitset>
 #include <iostream> 
 #include <limits>
+#include <memory>
 #include <unordered_map>
 #include <queue>
 #include <typeinfo>
@@ -328,7 +329,7 @@ public:
         {
             if((mask & target_mask) == target_mask)
             {
-                for(auto id : group.data()) { result.emplace_back(id, get<Components>(id)...); }   
+                for(auto id : group.data()) { result.emplace_back(id,get<Components>(id)...); }   
             }
         }
 
