@@ -3,16 +3,12 @@
 
 struct pos 
 {
-    int x;
-    int y;
-    int z;
+    int x, y, z;
 };
 
 struct vel
 {
-    int dx;
-    int dy;
-    int dz;
+    int dx, dy, dz;
 };
 
 int main()
