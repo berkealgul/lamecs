@@ -2,20 +2,19 @@
 
 lamecs is a header only library for sparse-set based "pure" ecs implementation
 
-## Code example
+## Code Example
 ```cpp
+#define LAMECS_INFO_ENABLED
+#include "lamecs.hpp"
+
 struct pos 
 {
-    int x;
-    int y;
-    int z;
+    int x, y, z;
 };
 
 struct vel
 {
-    int dx;
-    int dy;
-    int dz;
+    int dx, dy, dz;
 };
 
 int main()
@@ -39,14 +38,17 @@ int main()
     registry.remove<vel>(e2);
     
     registry.remove_entity(e3);
-    
+
+    // access and modify specific components of an entity
+    auto [p, v] = registry.get_entity<pos, vel>(e1);
+
     // callback style iterating
-    registry.each<pos>([&registry](lamecs::entity_id id, pos& v)
+    registry.each<vel>([&registry](lamecs::entity_id id, vel& v)
     {
         //...
     });
 
-    registry.each<vel>([&registry](vel& v)
+    registry.each<vel, pos>([&registry](vel& v, pos& p)
     {
         //...
     });
