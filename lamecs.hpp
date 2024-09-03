@@ -41,7 +41,7 @@ constexpr size_t DENSE_SET_CHUNK_SIZE = 3200;
 constexpr size_t SPARSE_PAGINATION_CHUNK_SIZE = 1600;
 
 // custom types
-using entity_id = u_int32_t;
+using entity_id = unsigned int;
 using component_type   = const char*; 
 using component_bitset = std::bitset<MAX_COMPONENT_COUNT>;
 
