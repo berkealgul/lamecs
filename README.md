@@ -28,6 +28,7 @@ int main()
     // you dont have to do this since components are registered during .emplace()  
     registry.register_component<pos>();
 
+    // add or overwrite specific component for and entity
     registry.emplace<pos>(e1, {0, 0, 0});
     registry.emplace<pos>(e2, {0, 0, 1});
     registry.emplace<vel>(e1, {1, 0, 0});
