@@ -166,7 +166,7 @@ class registry
 {
 private:    
     std::queue<entity_id> available_entity_ids_;
-    std::vector<std::unique_ptr<sparse_set_interface>> component_pools_;
+    std::vector<std::unique_ptr<sparse_set_interface>> component_pools_; //index of specific components pool is its position in component bitset (component_bit_positions_[component_type])
     std::unordered_map<component_bitset, sparse_set<entity_id>> enitity_groups_;
     std::unordered_map<component_type, size_t> component_bit_positions_;
     sparse_set<component_bitset> component_bitsets_;
