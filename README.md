@@ -1,6 +1,6 @@
 # lamecs
 
-lamecs is a header only library for sparse-set based "pure" ecs implementation
+```lamecs``` is a header only library for sparse-set based "pure" ecs implementation
 
 ## Code Example
 ```cpp
